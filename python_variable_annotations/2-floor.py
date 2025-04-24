@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import math
 
-def floor(n: float) -> float:
+def floor(n: float) -> int:
     """
     Return the floor of a float number.
 
@@ -9,6 +9,6 @@ def floor(n: float) -> float:
         n (float): The number to floor.
 
     Returns:
-        float: The largest integer less than or equal to n.
+        int: The largest integer less than or equal to n.
     """
     return math.floor(n)
