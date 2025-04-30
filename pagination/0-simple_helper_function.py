@@ -1,20 +1,16 @@
 #!/usr/bin/env python3
-"""
-Defines a function that returns the start and end index for pagination.
-"""
+""" Task 0: Simple helper function """
+
 
 def index_range(page: int, page_size: int) -> tuple:
-    """
-    Return a tuple of size two containing a start index and an end index
-    for the given page and page size.
-
-    Args:
-        page (int): The page number (1-indexed).
-        page_size (int): The number of items per page.
-
-    Returns:
-        tuple: A tuple containing the start index and the end index.
-    """
-    start_index = (page - 1) * page_size
-    end_index = page * page_size
-    return (start_index, end_index)
+    """ return a tuple of size two containing a start and end index """
+    range = ()
+    if page == 1:
+        Start_index = 0
+        End_index = page * page_size
+        range = (Start_index, End_index)
+    else:
+        Start_index = (page - 1) * page_size
+        End_index = page * page_size
+        range = (Start_index, End_index)
+    return range
