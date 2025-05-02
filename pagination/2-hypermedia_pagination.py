@@ -8,6 +8,8 @@ from typing import List, Dict, Any, Tuple
 
 
 def index_range(page: int, page_size: int) -> Tuple[int, int]:
+    
+    
     """
     Returns a tuple of size two containing a start index and an end index
     corresponding to the range of indexes to return in a list for those
@@ -27,6 +29,8 @@ def index_range(page: int, page_size: int) -> Tuple[int, int]:
 
 
 class Server:
+    
+    
     """Server class to paginate a database of popular baby names.
     """
     DATA_FILE = "Popular_Baby_Names.csv"
@@ -46,6 +50,8 @@ class Server:
         return self.__dataset
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
+        
+        
         """
         Returns a page of the dataset based on pagination parameters.
         
@@ -56,28 +62,24 @@ class Server:
         Returns:
             List[List]: The paginated data
         """
-        # Verify that both arguments are integers greater than 0
         assert isinstance(page, int) and page > 0, "Page must be a positive integer"
         assert isinstance(page_size, int) and page_size > 0, "Page size must be a positive integer"
         
-        # Get the dataset
         dataset = self.dataset()
         
-        # If dataset is empty or invalid page parameters, return empty list
         if not dataset:
             return []
         
-        # Use index_range to find the correct indexes
         start_idx, end_idx = index_range(page, page_size)
         
-        # Return empty list if start index is out of range
         if start_idx >= len(dataset):
             return []
         
-        # Return the appropriate page of the dataset
         return dataset[start_idx:end_idx]
     
     def get_hyper(self, page: int = 1, page_size: int = 10) -> Dict[str, Any]:
+        
+        
         """
         Returns a dictionary containing hypermedia pagination information.
         
@@ -88,20 +90,15 @@ class Server:
         Returns:
             Dict: Dictionary containing pagination information
         """
-        # Get the page data using the get_page method
         data = self.get_page(page, page_size)
         
-        # Calculate total dataset size and total pages
         total_items = len(self.dataset())
         total_pages = math.ceil(total_items / page_size) if page_size > 0 else 0
         
-        # Determine next page (None if no next page)
         next_page = page + 1 if page < total_pages else None
         
-        # Determine previous page (None if no previous page)
         prev_page = page - 1 if page > 1 else None
         
-        # Create and return the hypermedia dictionary
         return {
             'page_size': len(data),
             'page': page,
