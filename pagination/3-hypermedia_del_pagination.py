@@ -9,8 +9,12 @@ from typing import List, Dict, Any
 
 
 class Server:
+    
+    
     """Server class to paginate a database of popular baby names.
     """
+    
+    
     DATA_FILE = "Popular_Baby_Names.csv"
 
     def __init__(self):
@@ -18,6 +22,8 @@ class Server:
         self.__indexed_dataset = None
 
     def dataset(self) -> List[List]:
+        
+        
         """Cached dataset
         """
         if self.__dataset is None:
@@ -29,8 +35,12 @@ class Server:
         return self.__dataset
 
     def indexed_dataset(self) -> Dict[int, List]:
+        
+        
         """Dataset indexed by sorting position, starting at 0
         """
+        
+        
         if self.__indexed_dataset is None:
             dataset = self.dataset()
             truncated_dataset = dataset[:1000]
@@ -40,6 +50,8 @@ class Server:
         return self.__indexed_dataset
 
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
+        
+        
         """
         Returns a dictionary with pagination information that is resilient
         to deletion of items from the dataset.
@@ -51,33 +63,27 @@ class Server:
         Returns:
             Dict: Dictionary containing deletion-resilient pagination information
         """
-        # Set default index to 0 if None is provided
+        
         if index is None:
             index = 0
             
-        # Get the indexed dataset
         indexed_data = self.indexed_dataset()
         
-        # Verify that index is in valid range
         assert isinstance(index, int) and 0 <= index < len(self.dataset()), \
             "Index is out of range"
         
-        # Initialize data list and count of collected items
         data = []
         current_index = index
         items_collected = 0
         
-        # Collect page_size items, skipping indices that don't exist anymore
         while items_collected < page_size and current_index < len(self.dataset()):
             if current_index in indexed_data:
                 data.append(indexed_data[current_index])
                 items_collected += 1
             current_index += 1
             
-        # Find the next index (first index after the last item on current page)
         next_index = current_index
         
-        # Create and return the hypermedia dictionary
         return {
             'index': index,
             'data': data,

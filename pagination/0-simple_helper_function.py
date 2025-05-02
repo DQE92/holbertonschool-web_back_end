@@ -3,6 +3,8 @@
 
 
 def index_range(page: int, page_size: int) -> tuple:
+    
+    
     """ return a tuple of size two containing a start and end index """
     range = ()
     if page == 1:
