@@ -2,54 +2,39 @@ const fs = require('fs');
 
 function countStudents(path) {
   return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (err, data) => {
-      if (err) {
-        reject(new Error('Cannot load the database'));
-        return;
-      }
+    fs.readFile(path, (error, data) => {
+      if (error) reject(Error('Cannot load the database'));
+      if (data) {
+        const response = [];
+        const content = data.toString();
+        const chainStudents = content.split('\n');
+        let students = chainStudents.filter((item) => item);
 
-      try {
-        // Split the data into lines and filter out empty lines
-        const lines = data.split('\n').filter(line => line.trim() !== '');
-        
-        // Remove the header line (first line)
-        const studentLines = lines.slice(1);
-        
-        // Filter out any empty student records
-        const validStudents = studentLines.filter(line => {
-          const fields = line.split(',');
-          return fields.length >= 4 && fields[0].trim() !== '';
-        });
+        const NUMBER_OF_STUDENTS = students.length ? students.length - 1 : 0;
+        const msg = `Number of students: ${NUMBER_OF_STUDENTS}`;
+        console.log(msg);
+        response.push(msg);
 
-        // Log total number of students
-        console.log(`Number of students: ${validStudents.length}`);
-
-        // Group students by field
-        const fieldGroups = {};
-        
-        validStudents.forEach(line => {
-          const fields = line.split(',');
-          const firstName = fields[0].trim();
-          const field = fields[3].trim();
-          
-          if (!fieldGroups[field]) {
-            fieldGroups[field] = [];
+        students = students.slice(1);
+        const dict = {};
+        students.forEach((element) => {
+          const list = element.split(',');
+          const key = list[3];
+          if (!(key in dict)) {
+            dict[key] = [];
           }
-          fieldGroups[field].push(firstName);
+          dict[key].push(`${list[0]}`);
         });
-
-        // Log students by field
-        Object.keys(fieldGroups).forEach(field => {
-          const students = fieldGroups[field];
-          console.log(`Number of students in ${field}: ${students.length}. List: ${students.join(', ')}`);
-        });
-
-        resolve();
-      } catch (error) {
-        reject(new Error('Cannot load the database'));
+        for (const i in dict) {
+          if (i) {
+            const msg2 = `Number of students in ${i}: ${dict[i].length}. List: ${dict[i].join(', ')}`;
+            console.log(msg2);
+            response.push(msg2);
+          }
+        }
+        resolve(response);
       }
     });
   });
 }
-
 module.exports = countStudents;
